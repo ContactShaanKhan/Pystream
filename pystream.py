@@ -49,12 +49,16 @@ class Pystream():
             in_place = self.default_in_place
 
         def _concat(x, y):
-            if not isinstance(x, list):
-                x = [x]
-            if not isinstance(y, list):
-                y = [y]
+            x_is_list = isinstance(x, list)
+            y_is_list = isinstance(y, list)
 
-            return [*x, *y]
+            if x_is_list and y_is_list:
+                return [*x, *y]
+            if x_is_list:
+                return [*x, y]
+            if y_is_list:
+                return [*x, y]
+            return [x, y]            
 
         _data = self.data
         for i in range(0, num_levels):
