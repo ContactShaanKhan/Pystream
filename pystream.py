@@ -57,7 +57,7 @@ class Pystream():
             if x_is_list:
                 return [*x, y]
             if y_is_list:
-                return [*x, y]
+                return [x, *y]
             return [x, y]            
 
         _data = self.data
