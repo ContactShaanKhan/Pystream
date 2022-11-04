@@ -10,8 +10,8 @@ print(evens)
 def is_even(x):
     return x % 2 == 0
 
-even_strings = Pystream(lst).filter(is_even).map(lambda x: x * 10).collect()
-print(even_strings)
+ten_times_even = Pystream(lst).filter(is_even).map(lambda x: x * 10).collect()
+print(ten_times_even)
 
 # Reduce list for sum
 sum_of_lst = Pystream(lst, True).reduce(lambda x, y: x + y).collect()
