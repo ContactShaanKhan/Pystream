@@ -37,7 +37,38 @@ class Pystream():
 
         _data = functools.reduce(func, self.data)
         return self.__apply_in_place(in_place, _data)
+
+    # Terminal - Apply this function to all the elements in the pystream
+    def foreach(self, func):
+        for elem in list(self.data):
+            func(elem)
+
+    # Flatten the list by any number of levels
+    def flat(self, num_levels=1, in_place=None):
+        if in_place is None:
+            in_place = self.default_in_place
+
+        def _concat(x, y):
+            if not isinstance(x, list):
+                x = [x]
+            if not isinstance(y, list):
+                y = [y]
+
+            return [*x, *y]
+
+        _data = self.data
+        for i in range(0, num_levels):
+            _data = functools.reduce(_concat, _data)
         
+        return self.__apply_in_place(in_place, _data)
+        
+    def flatmap(self, func, in_place=None):
+        if in_place is None:
+            in_place = self.default_in_place
+
+        _data = Pystream(self.data, True).map(func).flat().collect()
+        return self.__apply_in_place(in_place, _data)
+
     # Terminal - collects to a list
     def collect(self):
         try:
