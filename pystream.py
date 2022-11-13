@@ -8,6 +8,9 @@ class Pystream():
         self.default_in_place = default_in_place
 
     def __apply_in_place(self, in_place, new_data):
+        if in_place is None:
+            in_place = self.default_in_place
+        
         if in_place:
             self.data = new_data
             return self
@@ -16,25 +19,16 @@ class Pystream():
               
     # Intermediate
     def map(self, func, in_place=None):
-        if in_place is None:
-            in_place = self.default_in_place
-
         _data = map(func, self.data)
         return self.__apply_in_place(in_place, _data)
 
     # Intermediate
     def filter(self, func, in_place=None):
-        if in_place is None:
-            in_place = self.default_in_place
-
         _data = filter(func, self.data)
         return self.__apply_in_place(in_place, _data)
 
     # Intermediate
     def reduce(self, func, in_place=None):
-        if in_place is None:
-            in_place = self.default_in_place
-
         _data = functools.reduce(func, self.data)
         return self.__apply_in_place(in_place, _data)
 
@@ -45,9 +39,6 @@ class Pystream():
 
     # Flatten the list by any number of levels
     def flat(self, num_levels=1, in_place=None):
-        if in_place is None:
-            in_place = self.default_in_place
-
         def _concat(x, y):
             x_is_list = isinstance(x, list)
             y_is_list = isinstance(y, list)
@@ -67,9 +58,6 @@ class Pystream():
         return self.__apply_in_place(in_place, _data)
         
     def flatmap(self, func, in_place=None):
-        if in_place is None:
-            in_place = self.default_in_place
-
         _data = Pystream(self.data, True).map(func).flat().collect()
         return self.__apply_in_place(in_place, _data)
 
